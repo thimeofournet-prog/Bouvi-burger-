@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0483a"/><stop offset="1" stop-color="#c4271d"/></linearGradient>
+    <linearGradient id="bun" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0b45c"/><stop offset="1" stop-color="#d98a3a"/></linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="108" fill="url(#bg)"/>
+  <circle cx="256" cy="256" r="196" fill="#fff6e4" opacity=".16"/>
+  <!-- pain du haut -->
+  <path d="M96 238c0-84 72-142 160-142s160 58 160 142z" fill="url(#bun)" stroke="#7a4217" stroke-width="10" stroke-linejoin="round"/>
+  <g fill="#fff2d2"><ellipse cx="196" cy="172" rx="11" ry="6" transform="rotate(-25 196 172)"/><ellipse cx="256" cy="150" rx="11" ry="6"/><ellipse cx="316" cy="172" rx="11" ry="6" transform="rotate(25 316 172)"/><ellipse cx="226" cy="206" rx="11" ry="6" transform="rotate(-10 226 206)"/><ellipse cx="290" cy="206" rx="11" ry="6" transform="rotate(10 290 206)"/></g>
+  <!-- salade -->
+  <path d="M84 246q22 26 44 0t44 0 44 0 44 0 44 0 44 0 44 0v10H84z" fill="#6cc24a" stroke="#2f6b1e" stroke-width="8" stroke-linejoin="round"/>
+  <!-- fromage -->
+  <path d="M100 262h312l-36 34-28-20-28 20-28-20-28 20-28-20-28 20-28-20-28 20z" fill="#ffb52e" stroke="#9a6200" stroke-width="8" stroke-linejoin="round"/>
+  <!-- steak -->
+  <rect x="96" y="292" width="320" height="46" rx="23" fill="#6a3a1f" stroke="#2e1608" stroke-width="10"/>
+  <!-- pain du bas -->
+  <path d="M104 346h304c0 40-30 62-70 62H174c-40 0-70-22-70-62z" fill="url(#bun)" stroke="#7a4217" stroke-width="10" stroke-linejoin="round"/>
+</svg>
