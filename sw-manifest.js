@@ -1,5 +1,5 @@
 // Fichier généré par tools/build-sw.mjs — ne pas modifier à la main.
-self.BB_VERSION = 'd4d2831967';
+self.BB_VERSION = '5310ff6824';
 self.BB_ASSETS = [
  "./",
  "./index.html",
@@ -13,6 +13,7 @@ self.BB_ASSETS = [
  "./src/icons.js",
  "./src/main.js",
  "./src/models.js",
+ "./src/net.js",
  "./src/render.js",
  "./src/rules.js",
  "./src/save.js",

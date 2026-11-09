@@ -244,12 +244,12 @@ function buildKitchen(S) {
 
   /* --- station boissons --- */
   const sd = new THREE.Group(); sd.position.set(5.62, H, -.55); K.add(sd);
-  const mach = tinted('n_kitchenCoffeeMachine', '#ff8a7a'); mach.scale.setScalar(3.4); mach.rotation.y = -Math.PI / 2; mach.position.set(0, 0, 0); sd.add(mach);
-  [-.18, .18].forEach(dz => { const c = M('f_soda'); const s = .2 / info('f_soda').h; c.scale.setScalar(s); c.position.set(-.34, -.02, dz); c.visible = false; sd.add(c); W.soda.push({ c }); });
+  const mach = tinted('n_kitchenFridgeSmall', '#ff5a48'); mach.scale.setScalar(1.7); mach.rotation.y = -Math.PI / 2; mach.position.set(.08, -.01, 0); sd.add(mach);
+  [-.18, .18].forEach(dz => { const c = M('f_soda'); const s = .2 / info('f_soda').h; c.scale.setScalar(s); c.position.set(-.3, -.02, dz); c.visible = false; sd.add(c); W.soda.push({ c }); });
   reg(sd, 'soda'); lab(sd, 'Machine à soda', .6, -.3, .85, 0);
   const cs = new THREE.Group(); cs.position.set(5.45, H, .55); K.add(cs);
   for (let i = 0; i < 6; i++) { const c = M('f_cup'); const s = .14 / info('f_cup').h; c.scale.setScalar(s); c.position.y = i * .03; cs.add(c); }
-  reg(cs, 'cups'); lab(cs, 'Gobelets', .42, 0, .55, 0); stockLabel(cs, 'cup', 'Gobelets', 0, .75, 0, .5);
+  reg(cs, 'cups'); stockLabel(cs, 'cup', 'Gobelets', 0, .55, 0, .5);
 
   /* --- comptoir clients : caisse, plateau, sonnette --- */
   const pos = new THREE.Group(); pos.position.set(REG.x, 1.0, 1.55); K.add(pos);

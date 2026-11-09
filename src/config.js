@@ -1,8 +1,9 @@
 // Réglages techniques du projet.
+const param = new URLSearchParams(location.search).get('relay');
 export const MULTI = {
-  // Passer à true quand le serveur de jeu à deux (voir docs/DEUX-JOUEURS.md) est en ligne.
-  enabled: false,
-  // Adresse WebSocket du relais (Cloudflare Worker), ex. 'wss://bouviburger-relais.MONCOMPTE.workers.dev'
-  relayUrl: '',
+  // Adresse du relais « deux joueurs » (Cloudflare Worker), voir docs/DEUX-JOUEURS.md.
+  // Exemple : 'wss://bouviburger-relais.MONCOMPTE.workers.dev'. Vide = jeu à deux désactivé.
+  relayUrl: param || '',
+  get enabled() { return !!this.relayUrl; },
 };
 export const VERSION = '1.0.0';

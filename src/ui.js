@@ -105,11 +105,11 @@ export function endScreen(res, save, cb) {
   const lvlUp = res.lvl1 > res.lvl0; let ups = '';
   for (let l = res.lvl0 + 1; l <= res.lvl1; l++) if (UNLOCKS[l]) ups += `<div class="unlock"><b>Niveau ${l} : ${UNLOCKS[l].t}</b><span>${UNLOCKS[l].d}</span></div>`;
   const lvl = res.lvl1, lo = XP_AT[lvl - 1], hi = XP_AT[lvl] ?? lo + 1, frac = lvl >= MAX_LEVEL ? 1 : (save.xp - lo) / (hi - lo);
-  overlay(`<h2>Fin du jour ${save.day - 1}</h2><div class="stars">${[0, 1, 2].map(i => `<span class="${i < res.st ? '' : 'off'}">★</span>`).join('')}</div>
+  overlay(`<h2>Fin du jour ${save.day - 1}</h2>${cb.next ? '' : '<p class="note">L’hôte peut lancer le jour suivant.</p>'}<div class="stars">${[0, 1, 2].map(i => `<span class="${i < res.st ? '' : 'off'}">★</span>`).join('')}</div>
     <div class="recap"><span>Ventes</span><b>${euro(res.sales)}${res.rec && res.sales > 0 ? ' (record !)' : ''}</b><span>Dépenses en stock</span><b>${euro(res.spent)}</b><span>Clients servis</span><b>${res.served}</b><span>Clients furieux</span><b>${res.angry}</b><span>En caisse</span><b>${euro(save.money)}</b><span>Étoiles à</span><b>${res.goal.map(g => Math.round(g) + ' €').join(' / ')}</b></div>
     <div class="xpbox"><div class="xpt"><span>Niveau ${lvl}</span><b>+${res.xpGain + res.bonus} XP</b></div><div class="xpbar"><i style="width:${Math.min(100, frac * 100)}%"></i></div></div>
     ${lvlUp ? `<div class="levelup">Niveau ${res.lvl1} atteint !</div>${ups}` : ''}`,
-    [['Boutique', cb.shop, 'b'], ['Jour suivant', cb.next, 'a'], ['Menu', cb.menu, 'c']]);
+    [...(cb.shop ? [['Boutique', cb.shop, 'b']] : []), ...(cb.next ? [['Jour suivant', cb.next, 'a']] : []), ['Menu', cb.menu, 'c']].concat(cb.next ? [] : []));
   if (lvlUp) sfx('level');
 }
 
