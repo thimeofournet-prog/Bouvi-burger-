@@ -1,5 +1,6 @@
 // Construction du restaurant avec les modèles 3D : salle, cuisine, mobilier, éclairage.
 import * as THREE from 'three';
+if (!CanvasRenderingContext2D.prototype.roundRect) CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h) { this.rect(x, y, w, h); };
 import * as BGU from 'three/addons/utils/BufferGeometryUtils.js';
 import { R, touch, spriteLayer } from './render.js';
 import { M, put, tinted, info, mergeStatic, ownMaterials } from './models.js';

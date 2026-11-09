@@ -14,7 +14,7 @@ export const CHAR_FILES = ['male-a', 'male-b', 'male-c', 'male-d', 'male-e', 'ma
 const load = url => new Promise((res, rej) => loader.load(url, res, undefined, rej));
 
 export async function loadModels(onProgress) {
-  const base = new URL('../assets/models/', import.meta.url).href, ext = window.BB_MODEL_EXT || '.glb'; // ext : aperçu hébergé qui ne sert pas les .glb
+  const base = new URL('assets/models/', document.baseURI).href, ext = window.BB_MODEL_EXT || '.glb'; // ext : aperçu hébergé qui ne sert pas les .glb
   const props = await load(base + 'props' + ext);
   props.scene.updateMatrixWorld(true);
   for (const n of [...props.scene.children]) {

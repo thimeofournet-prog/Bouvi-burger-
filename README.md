@@ -35,7 +35,7 @@ Commandes : Z Q S D (ou flèches) pour marcher, souris pour regarder (cliquez da
 
 ## Mise à jour du cache hors ligne
 
-Après toute modification de fichier du jeu : `node tools/build-sw.mjs` (recalcule la liste et la version du cache ; les joueurs reçoivent la nouvelle version au prochain lancement).
+Après toute modification de fichier du jeu : `sh tools/build.sh` (recompile `dist/game.js` puis recalcule la liste et la version du cache ; les joueurs reçoivent la nouvelle version au prochain lancement).
 
 ## Mise en ligne (GitHub Pages)
 

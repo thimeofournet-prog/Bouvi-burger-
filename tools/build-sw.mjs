@@ -3,7 +3,7 @@ import { readdirSync, readFileSync, writeFileSync, statSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { join, relative } from 'node:path';
 const root = new URL('..', import.meta.url).pathname;
-const include = ['index.html', 'manifest.webmanifest', 'css', 'src', 'vendor', 'assets/models', 'fonts', 'icons'];
+const include = ['index.html', 'manifest.webmanifest', 'css', 'dist', 'assets/models', 'fonts', 'icons'];
 const files = [];
 const walk = p => { const s = statSync(join(root, p)); if (s.isDirectory()) readdirSync(join(root, p)).sort().forEach(f => walk(join(p, f))); else files.push(p); };
 include.forEach(walk);
