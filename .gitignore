@@ -2,3 +2,4 @@ node_modules
 tools/node_modules
 *.log
 dev-test.html
+preview.html

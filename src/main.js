@@ -10,6 +10,7 @@ import { setVolume, sfx } from './audio.js';
 import { euro, UNLOCKS, levelFor, XP_AT } from './data.js';
 import { overlay, hide, toast, pop, renderHUD, resetTickets, settingsScreen, tabletScreen, endScreen, shopScreen } from './ui.js';
 import { MULTI } from './config.js';
+import * as rules from './rules.js';
 
 const $ = id => document.getElementById(id);
 let SAVE = loadSave(), SET = loadSettings(), mode = 'solo', li = 0, last = performance.now(), booted = false;
@@ -36,13 +37,13 @@ function menu() {
   overlay(`<h1>Bouvi'Burger</h1>
     <p>Vous tenez le seul fast-food de Bouvines. Servez les clients, gérez vos stocks, montez en niveau !</p>
     ${played ? `<div class="menuLine"><span>Jour <b>${SAVE.day}</b> · Niveau <b>${lvl}</b></span><span>Caisse <b>${euro(SAVE.money)}</b></span></div>` : ''}
-    <ol>
+    <details class="how" ${innerHeight > 640 ? 'open' : ''}><summary>Comment jouer ?</summary><ol>
       <li>Au <b>comptoir</b>, prenez la commande du client qui attend avec un « ! ».</li>
       <li>Steak cru sur la <b>plancha</b>, frites surgelées dans la <b>friteuse</b>, gobelet sous la <b>machine à soda</b>.</li>
       <li>Sur une <b>planche</b> : pain, garnitures, sauces, puis pain du dessus (voir le tableau des recettes).</li>
       <li>Posez tout sur le <b>plateau</b> et appuyez sur la <b>sonnette</b>.</li>
       <li>Plus de stock ? La <b>tablette</b> au fond de la cuisine commande les produits avec l’argent de la caisse.</li>
-    </ol>
+    </ol></details>
     <div class="ctl">${touch ? 'Manette à gauche pour marcher, glissez à droite pour regarder. Visez un objet avec le point au centre, puis touchez Action.' : 'Z Q S D pour marcher, souris pour regarder (cliquez dans le restaurant). Visez un objet avec le point central et cliquez, ou appuyez sur E.'}</div>
     ${SAVE.best ? `<p class="note">Meilleure journée : ${euro(SAVE.best)}</p>` : ''}`,
     [[played ? 'Continuer — jour ' + SAVE.day : 'Jouer', startDay, 'a'], ['Réglages', () => openSettings(false), 'c'], ...(MULTI.enabled ? [['Jouer à deux', () => toast('Bientôt'), 'b']] : [])]);
@@ -88,8 +89,10 @@ function showEnd() {
 /* ---------- boucle ---------- */
 function loop(now) {
   const dt = Math.min(.05, (now - last) / 1000); last = now;
-  if (G) { if (G.ph === 'play' && C.canPlay()) moveLocal(dt); if (G.ph === 'play') simulate(dt); renderHUD(); }
-  try { draw(now, dt, li, mode); renderFrame(dt); } catch (e) { console.error(e); }
+  try {
+    if (G) { if (G.ph === 'play' && C.canPlay()) moveLocal(dt); if (G.ph === 'play') simulate(dt); renderHUD(); }
+    draw(now, dt, li, mode); renderFrame(dt);
+  } catch (e) { console.error(e); }
   requestAnimationFrame(loop);
 }
 
@@ -104,6 +107,6 @@ async function boot() {
   $('loading').remove(); booted = true;
   menu(); requestAnimationFrame(loop);
   if ('serviceWorker' in navigator && location.protocol !== 'file:' && !new URLSearchParams(location.search).has('nosw')) navigator.serviceWorker.register('./sw.js').catch(() => {});
-  if (new URLSearchParams(location.search).has('debug')) window.__bb = { get G() { return G; }, SAVE: () => SAVE, startDay, interact, R };
+  if (new URLSearchParams(location.search).has('debug')) window.__bb = { get G() { return G; }, SAVE: () => SAVE, startDay, interact, R, rules, openSettings };
 }
 boot();

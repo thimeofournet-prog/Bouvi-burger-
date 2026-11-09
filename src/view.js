@@ -1,6 +1,6 @@
 // Affichage : synchronise la scène 3D avec l'état du jeu (caméra, cuissons, clients, bulles, visée).
 import * as THREE from 'three';
-import { R } from './render.js';
+import { R, spriteLayer } from './render.js';
 import { W, setStock, reg } from './scene.js';
 import { loose, burgerObj, sig, ei } from './food.js';
 import { makePerson, CHAR_FILES } from './models.js';
@@ -15,13 +15,13 @@ let puffPool = [], puffs = [];
 export const V = { promptFor: () => '' };
 
 export function initView() {
-  ray = new THREE.Raycaster(); ray.far = 2.6; CENTER = new THREE.Vector2(0, 0); tmpV = new THREE.Vector3(); tmpCol = new THREE.Color();
+  ray = new THREE.Raycaster(); ray.far = 2.6; ray.layers.enable(1); CENTER = new THREE.Vector2(0, 0); tmpV = new THREE.Vector3(); tmpCol = new THREE.Color();
   hand = new THREE.Group(); R.camera.add(hand);
   for (let i = 0; i < 48; i++) {
-    const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: puffTex(), transparent: true, depthWrite: false, opacity: 0 })); s.visible = false; s.renderOrder = 5; R.scene.add(s); puffPool.push(s);
+    const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: puffTex(), transparent: true, depthWrite: false, opacity: 0 })); s.visible = false; s.renderOrder = 5; s.layers.set(1); R.scene.add(s); puffPool.push(s);
   }
   // barres de progression
-  const mk = (parent, x, y, z) => { const c = document.createElement('canvas'); c.width = 64; c.height = 10; const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: t, transparent: true, depthTest: false, depthWrite: false })); s.scale.set(.22, .034, 1); s.position.set(x, y, z); s.renderOrder = 15; s.userData = { c, t, k: '' }; s.visible = false; parent.add(s); return s; };
+  const mk = (parent, x, y, z) => { const c = document.createElement('canvas'); c.width = 64; c.height = 10; const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: t, transparent: true, depthTest: false, depthWrite: false })); s.scale.set(.22, .034, 1); s.position.set(x, y, z); s.renderOrder = 15; s.userData = { c, t, k: '' }; s.visible = false; s.layers.set(1); parent.add(s); return s; };
   W.grill.forEach(s => { s.bar = mk(s.p, 0, .12, 0); });
   W.fry.forEach(f => { f.bar = mk(f.v, 0, .45, 0); });
   W.soda.forEach(s => { s.bar = mk(s.c.parent, s.c.position.x, s.c.position.y + .3, s.c.position.z); });
@@ -48,7 +48,7 @@ function removeCust(id) { const a = custs[id]; if (!a) return; W.custLayer.remov
 
 function bubbleSprite() {
   const c = document.createElement('canvas'); c.width = 128; c.height = 160; const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
-  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: t, transparent: true, depthTest: false })); s.renderOrder = 20; s.scale.set(.32, .4, 1); s.position.y = 2.0; s.userData = { c, t, key: '' }; return s;
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: t, transparent: true, depthTest: false })); s.renderOrder = 20; s.layers.set(1); s.scale.set(.32, .4, 1); s.position.y = 2.0; s.userData = { c, t, key: '' }; return s;
 }
 function drawBubble(s, key, fn) { if (s.userData.key === key) return; s.userData.key = key; const g = s.userData.c.getContext('2d'); g.clearRect(0, 0, 128, 160); fn(g); s.userData.t.needsUpdate = true; }
 const shown = o => { for (let p = o; p; p = p.parent) if (p.visible === false) return false; return true; };
@@ -109,7 +109,7 @@ export function draw(now, dt, li, mode) {
   const live = new Set();
   G.cust.forEach(c => {
     live.add(c.id); let a = custs[c.id];
-    if (!a) { const p = makePerson(CHAR_FILES[(c.id * 5 + 3 + G.day) % CHAR_FILES.length], 1.55 + ((c.id * 13) % 5) * .04); const bub = bubbleSprite(); bub.position.y = 2.05 / 1; p.g.add(bub); a = custs[c.id] = { p, g: p.g, bub }; reg(p.g, 'cust:' + c.id); W.custLayer.add(p.g); p.g.position.set(c.x, 0, c.z); }
+    if (!a) { const p = makePerson(CHAR_FILES[(c.id * 5 + 3 + G.day) % CHAR_FILES.length], 1.4 + ((c.id * 13) % 5) * .04); const bub = bubbleSprite(); bub.position.y = 2.05 / 1; p.g.add(bub); a = custs[c.id] = { p, g: p.g, bub }; reg(p.g, 'cust:' + c.id); W.custLayer.add(p.g); p.g.position.set(c.x, 0, c.z); }
     if (mode === 'guest' && c.tx !== undefined) { const k = Math.min(1, dt * 8); c.x += (c.tx - c.x) * k; c.z += (c.tz - c.z) * k; }
     const ox = a.g.position.x, oz = a.g.position.z; a.g.position.set(c.x, 0, c.z);
     const mv = Math.hypot(c.x - ox, c.z - oz) / Math.max(dt, .001);

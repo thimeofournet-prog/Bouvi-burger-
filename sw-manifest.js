@@ -1,5 +1,5 @@
 // Fichier généré par tools/build-sw.mjs — ne pas modifier à la main.
-self.BB_VERSION = '562e9d0e33';
+self.BB_VERSION = 'd4d2831967';
 self.BB_ASSETS = [
  "./",
  "./index.html",

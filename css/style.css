@@ -138,3 +138,5 @@ select{width:100%;padding:10px;border-radius:8px;border:2px solid var(--ink);bac
 small{font-weight:400}
 #prompt small{opacity:.8}
 [hidden]{display:none!important}
+details.how summary{cursor:pointer;font-weight:800;color:var(--teal);padding:4px 0}
+details.how ol{margin-top:6px}

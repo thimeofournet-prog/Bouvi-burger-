@@ -26,6 +26,7 @@ export function initRenderer(stage, s) {
   R.scene = new THREE.Scene();
   R.scene.background = new THREE.Color('#1a1a1a');
   R.camera = new THREE.PerspectiveCamera(70, 1.6, 0.05, 60);
+  R.camera.layers.enable(1);
   R.scene.add(R.camera);
   const pm = new THREE.PMREMGenerator(r);
   R.scene.environment = pm.fromScene(new RoomEnvironment(), 0.04).texture;
@@ -47,6 +48,8 @@ export function setTier(tier) {
   r.shadowMap.enabled = true;
   if (R.key) { const sm = tier === 'high' ? 2048 : 1024; if (R.key.shadow.mapSize.x !== sm) { R.key.shadow.mapSize.set(sm, sm); if (R.key.shadow.map) { R.key.shadow.map.dispose(); R.key.shadow.map = null; } } }
   r.setPixelRatio(pixelRatio());
+  const hdr = r.extensions.has('EXT_color_buffer_float') || r.extensions.has('EXT_color_buffer_half_float');
+  if (tier !== 'low' && !hdr) tier = R.tier = 'low';
   if (tier !== 'low') {
     try {
       const w = R.stage.clientWidth || 800, h = R.stage.clientHeight || 500;
@@ -61,6 +64,9 @@ export function setTier(tier) {
         g.updateGtaoMaterial({ radius: 0.45, distanceExponent: 1.2, thickness: 1, scale: 1.0, samples: 12, distanceFallOff: 1, screenSpaceRadius: false });
         g.updatePdMaterial({ lumaPhi: 10, depthPhi: 2, normalPhi: 3, radius: 4, radiusExponent: 1, rings: 2, samples: 12 });
         g.blendIntensity = 0.9;
+        // l'occlusion ambiante ne doit pas voir les étiquettes (sprites, calque 1)
+        const orig = g.render.bind(g);
+        g.render = (...a) => { R.camera.layers.disable(1); orig(...a); R.camera.layers.enable(1); };
         c.addPass(g); R.gtao = g;
       }
       if (settings.bloom !== false) {
@@ -102,3 +108,6 @@ export function renderFrame(dt) {
     }
   }
 }
+
+// Les sprites (étiquettes, bulles, vapeur) vivent sur le calque 1.
+export function spriteLayer(o) { o.traverse(n => { if (n.isSprite) n.layers.set(1); }); return o; }

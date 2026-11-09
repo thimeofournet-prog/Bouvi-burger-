@@ -14,8 +14,8 @@ export const CHAR_FILES = ['male-a', 'male-b', 'male-c', 'male-d', 'male-e', 'ma
 const load = url => new Promise((res, rej) => loader.load(url, res, undefined, rej));
 
 export async function loadModels(onProgress) {
-  const base = new URL('../assets/models/', import.meta.url).href;
-  const props = await load(base + 'props.glb');
+  const base = new URL('../assets/models/', import.meta.url).href, ext = window.BB_MODEL_EXT || '.glb'; // ext : aperçu hébergé qui ne sert pas les .glb
+  const props = await load(base + 'props' + ext);
   props.scene.updateMatrixWorld(true);
   for (const n of [...props.scene.children]) {
     n.removeFromParent();
@@ -28,7 +28,7 @@ export async function loadModels(onProgress) {
   if (onProgress) onProgress(0.6);
   let done = 0;
   await Promise.all(CHAR_FILES.map(async f => {
-    const g = await load(base + 'char-' + f + '.glb');
+    const g = await load(base + 'char-' + f + ext);
     g.scene.traverse(o => { if (o.isMesh) { o.castShadow = true; o.frustumCulled = false; } });
     CHARS[f] = { scene: g.scene, clips: g.animations };
     done++; if (onProgress) onProgress(0.6 + 0.4 * done / CHAR_FILES.length);

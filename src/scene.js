@@ -1,7 +1,7 @@
 // Construction du restaurant avec les modèles 3D : salle, cuisine, mobilier, éclairage.
 import * as THREE from 'three';
 import * as BGU from 'three/addons/utils/BufferGeometryUtils.js';
-import { R, touch } from './render.js';
+import { R, touch, spriteLayer } from './render.js';
 import { M, put, tinted, info, mergeStatic, ownMaterials } from './models.js';
 import { loose, burgerObj, bottleObj } from './food.js';
 import { drawIcon } from './icons.js';
@@ -56,7 +56,7 @@ export function texScreen(draw) { return tex(256, 192, draw); }
 
 /* ---------- étiquettes ---------- */
 function spriteFrom(drawFn, w, h, sx) {
-  const t = tex(w, h, drawFn); const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: t, transparent: true, depthWrite: false })); s.scale.set(sx, sx * h / w, 1); s.renderOrder = 10; return s;
+  const t = tex(w, h, drawFn); const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: t, transparent: true, depthWrite: false })); s.scale.set(sx, sx * h / w, 1); s.renderOrder = 10; s.layers.set(1); return s;
 }
 export function lab(parent, txt, sx, x, y, z) {
   const s = spriteFrom((g, w, h) => { g.fillStyle = 'rgba(15,20,20,.82)'; g.beginPath(); g.roundRect(4, 4, w - 8, h - 8, 24); g.fill();
@@ -66,7 +66,7 @@ export function lab(parent, txt, sx, x, y, z) {
 // étiquette de stock redessinable
 export function stockLabel(parent, id, name, x, y, z, sx = .5) {
   const c = document.createElement('canvas'); c.width = 512; c.height = 128; const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
-  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: t, transparent: true, depthWrite: false, toneMapped: false })); s.scale.set(sx * .8, sx * .2, 1); s.position.set(x, y, z); s.renderOrder = 10;
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: t, transparent: true, depthWrite: false, toneMapped: false })); s.scale.set(sx * .8, sx * .2, 1); s.position.set(x, y, z); s.renderOrder = 10; s.layers.set(1);
   s.userData = { c, t, name, last: null }; parent.add(s); W.labels[id] = s; return s;
 }
 export function setStock(id, n) {
